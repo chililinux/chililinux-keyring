@@ -1,1 +1,3 @@
-# chili-
+# chililinux-keyring
+
+ChilLinux GPG keyring

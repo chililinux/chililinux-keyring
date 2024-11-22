@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# -*- coding: utf-8 -*-
+
+post_upgrade() {
+	if usr/bin/pacman-key -l >/dev/null 2>&1; then
+		usr/bin/pacman-key --populate chililinux
+	else
+		pacman-key --init
+		pacman-key --populate chililinux
+	fi
+}
+
+post_install() {
+	if [ -x usr/bin/pacman-key ]; then
+		post_upgrade
+	fi
+}
