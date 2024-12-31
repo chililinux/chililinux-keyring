@@ -19,27 +19,26 @@ export bold="\033[1m"
 export reset="\033[0m"
 
 msg() {
-  local msg="$1"
-	echo -e "${green}==> [chililinux-keyring] ${bold}${yellow}${msg}${reset}" >&2
+	local msg="$1"
+	echo -e "${green}==> [chili-keyring] ${bold}${yellow}${msg}${reset}" >&2
 }
 
 post_upgrade() {
-	if usr/bin/pacman-key -l >/dev/null 2>&1; then
-		msg "Populating keyrings..."
-#		usr/bin/pacman-key --populate chililinux
-		usr/bin/pacman-key --populate
-	else
-		msg "Initializing pacman keyring..."
-		pacman-key --init
-		msg "Populating keyrings..."
-#		pacman-key --populate chililinux
-		usr/bin/pacman-key --populate
-	fi
-  msg "Done!"
+#	if ! pacman-key --list-keys >/dev/null 2>&1; then
+#		msg "Initializing pacman keyring..."
+#		pacman-key --init
+#	fi
+  msg "Initializing pacman keyring..."
+  pacman-key --init
+	msg "Importing keyring..."
+	pacman-key --add /usr/share/pacman/keyrings/chililinux.gpg
+	msg "Populating keyrings..."
+	pacman-key --populate chililinux
+	msg "Locally signing the chililinux key..."
+	pacman-key --lsign-key A0D5A8312A83940ED8B04B0F4BAC871802E960F1
+	msg "Done!"
 }
 
 post_install() {
-	if [ -x usr/bin/pacman-key ]; then
-		post_upgrade
-	fi
+	post_upgrade
 }
