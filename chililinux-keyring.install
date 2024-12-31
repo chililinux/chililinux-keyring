@@ -20,7 +20,7 @@ export reset="\033[0m"
 
 msg() {
 	local msg="$1"
-	echo -e "${green}==> [chili-keyring] ${bold}${yellow}${msg}${reset}" >&2
+	echo -e "${green}==> [chililinux-keyring] ${bold}${yellow}${msg}${reset}" >&2
 }
 
 pre_install() {
