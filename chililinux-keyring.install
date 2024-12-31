@@ -23,16 +23,19 @@ msg() {
 	echo -e "${green}==> [chili-keyring] ${bold}${yellow}${msg}${reset}" >&2
 }
 
+pre_install() {
+  msg "Locally signing the chililinux key..."
+  pacman-key --recv-keys A0D5A8312A83940ED8B04B0F4BAC871802E960F1
+  pacman-key --lsign-key A0D5A8312A83940ED8B04B0F4BAC871802E960F1
+}
+
+pre_upgrade() {
+  pre_install
+}
+
 post_upgrade() {
-#	if ! pacman-key --list-keys >/dev/null 2>&1; then
-#		msg "Initializing pacman keyring..."
-#		pacman-key --init
-#	fi
   msg "Initializing pacman keyring..."
   pacman-key --init
-	msg "Locally signing the chililinux key..."
-	pacman-key --recv-keys A0D5A8312A83940ED8B04B0F4BAC871802E960F1
-	pacman-key --lsign-key A0D5A8312A83940ED8B04B0F4BAC871802E960F1
 	msg "Populating keyrings..."
 	pacman-key --populate chililinux
 	msg "Done!"
