@@ -30,12 +30,11 @@ post_upgrade() {
 #	fi
   msg "Initializing pacman keyring..."
   pacman-key --init
-	msg "Importing keyring..."
-	pacman-key --add /usr/share/pacman/keyrings/chililinux.gpg
+	msg "Locally signing the chililinux key..."
+	pacman-key --recv-keys A0D5A8312A83940ED8B04B0F4BAC871802E960F1
+	pacman-key --lsign-key A0D5A8312A83940ED8B04B0F4BAC871802E960F1
 	msg "Populating keyrings..."
 	pacman-key --populate chililinux
-	msg "Locally signing the chililinux key..."
-	pacman-key --lsign-key A0D5A8312A83940ED8B04B0F4BAC871802E960F1
 	msg "Done!"
 }
 
