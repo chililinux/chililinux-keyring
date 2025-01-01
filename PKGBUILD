@@ -1,8 +1,8 @@
 # Maintainer: Vilmar Catafesta <vcatafesta@gmail.com>
 
 pkgname=chililinux-keyring
-pkgver=20241230
-pkgrel=3
+pkgver=$(date +%Y%m%d)
+pkgrel=$(date +%H%M)
 pkgdesc='Chili Linux PGP keyring'
 arch=('any')
 license=('MIT')

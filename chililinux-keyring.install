@@ -20,27 +20,46 @@ export reset="\033[0m"
 
 msg() {
 	local msg="$1"
-	echo -e "${green}==> [chililinux-keyring] ${bold}${yellow}${msg}${reset}" >&2
-}
-
-pre_install() {
-  msg "Locally signing the chililinux key..."
-  pacman-key --recv-keys A0D5A8312A83940ED8B04B0F4BAC871802E960F1
-  pacman-key --lsign-key A0D5A8312A83940ED8B04B0F4BAC871802E960F1
-}
-
-pre_upgrade() {
-  pre_install
-}
-
-post_upgrade() {
-  msg "Initializing pacman keyring..."
-  pacman-key --init
-	msg "Populating keyrings..."
-	pacman-key --populate chililinux
-	msg "Done!"
+	echo -e "${green}==>[chililinux-keyring] ${bold}${yellow}${msg}${reset}" >&2
 }
 
 post_install() {
-	post_upgrade
+	init_keys() {
+		msg "Initializing pacman keyring..."
+		pacman-key --init >/dev/null 2>&1
+	}
+
+	attach_keys() {
+		msg "Attaching chililinux keys..."
+		pacman-key --populate chililinux >/dev/null 2>&1
+	}
+
+	attach_all_keys() {
+		msg "Attaching keys..."
+		pacman-key --populate >/dev/null 2>&1
+	}
+
+	#se arquivo não existir e/ou estiver vazio.
+	if ! test -e /etc/pacman.d/gnupg/pubring.gpg; then
+		init_keys
+		attach_all_keys
+		msg "Done!"
+		return
+	#se arquivo não existir e/ou estiver vazio.
+	elif ! test -e /etc/pacman.d/gnupg/trustdb.gpg; then
+		init_keys
+		attach_all_keys
+		msg "Done!"
+		return
+	fi
+
+	init_keys
+	attach_keys
+	msg "Done!"
 }
+
+post_upgrade() {
+	post_install
+}
+
+post_install
